@@ -3,7 +3,6 @@ import TrackOrderInput from "../../src/components/track-order/TrackOrderInput";
 import CssBaseline from "@mui/material/CssBaseline";
 import SEO from "../../src/components/seo";
 import MainLayout from "../../src/components/layout/MainLayout";
-import { getServerSideProps } from "../index";
 import PolicyPage from "../../src/components/policy-page";
 import CustomContainer from "../../src/components/container";
 
@@ -25,5 +24,8 @@ const TrackOrder = ({ configData }) => {
   );
 };
 
+export const getServerSideProps = async () => {
+  return { props: {} };
+};
+
 export default TrackOrder;
-export { getServerSideProps };

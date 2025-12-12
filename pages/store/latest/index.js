@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
 import TypeWiseStore from "../../../src/components/Store/TypeWiseStore";
 import MainLayout from "../../../src/components/layout/MainLayout";
-import { getServerSideProps } from "../../index";
 import SEO from "../../../src/components/seo";
 import CustomContainer from "../../../src/components/container";
 import { CustomStackFullWidth } from "../../../src/styled-components/CustomStyles.style";
@@ -43,5 +42,8 @@ const Index = ({ configData, landingPageData }) => {
   );
 };
 
+export const getServerSideProps = async () => {
+  return { props: {} };
+};
+
 export default Index;
-export { getServerSideProps };

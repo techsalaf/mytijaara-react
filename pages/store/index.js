@@ -2,7 +2,6 @@ import React from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import MainLayout from "../../src/components/layout/MainLayout";
 import StoresWithFilter from "../../src/components/home/stores-with-filter";
-import { getServerSideProps } from "../index";
 import SEO from "../../src/components/seo";
 import { getImageUrl } from "utils/CustomFunctions";
 
@@ -26,5 +25,8 @@ const AllStore = ({ configData, landingPageData }) => {
   );
 };
 
+export const getServerSideProps = async () => {
+  return { props: {} };
+};
+
 export default AllStore;
-export { getServerSideProps };

@@ -1,30 +1,32 @@
-import { Container, Stack, Typography } from "@mui/material";
-import { useTranslation } from "react-i18next";
-import { CustomStackFullWidth } from "../src/styled-components/CustomStyles.style";
-import FourHundred from "../src/components/errors-svg/FourHundred";
-
-export default function Custom400() {
-  const { t } = useTranslation();
+// pages/404.js
+export default function Custom404() {
   return (
-    <Container
-      maxWidth="lg"
-      sx={{
-        mt: { md: "5rem" },
-        mb: { xs: "72px", md: "0" },
-      }}
-    >
-      <CustomStackFullWidth
-        justifyContent="center"
-        alignItems="center"
-        spacing={4}
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: '100vh',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      padding: '20px',
+      textAlign: 'center'
+    }}>
+      <h1 style={{ fontSize: '72px', margin: '0', color: '#6c757d' }}>404</h1>
+      <h2 style={{ fontSize: '24px', margin: '16px 0', color: '#333' }}>Page Not Found</h2>
+      <p style={{ color: '#666', marginBottom: '24px' }}>The page you are looking for does not exist.</p>
+      <a
+        href="/"
+        style={{
+          padding: '12px 24px',
+          fontSize: '16px',
+          backgroundColor: '#0070f3',
+          color: 'white',
+          textDecoration: 'none',
+          borderRadius: '8px'
+        }}
       >
-        <Stack maxWidth="500px" width="100%" spacing={2} padding="1rem">
-          <FourHundred />
-          <Typography align="center" variant="h3">
-            {t("something went wrong.")}
-          </Typography>
-        </Stack>
-      </CustomStackFullWidth>
-    </Container>
+        Go Home
+      </a>
+    </div>
   );
 }

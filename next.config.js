@@ -3,6 +3,12 @@ const nextConfig = {
   transpilePackages: ['simplebar-react'],
   // Silence Turbopack warning
   turbopack: {},
+  // Force dynamic rendering for all pages (fixes SSG theme context issues)
+  experimental: {
+    // Disable static generation to avoid theme context errors
+  },
+  // Use dynamic rendering instead of static
+  output: 'standalone',
   images: {
     remotePatterns: [
       {

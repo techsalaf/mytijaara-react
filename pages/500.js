@@ -1,79 +1,33 @@
 // pages/500.js
-import { Button, Container, Stack, Typography } from "@mui/material";
-import { CustomStackFullWidth } from "../src/styled-components/CustomStyles.style";
-import FiveHundred from "../src/assets/img/500.svg";
-import { useTranslation } from "react-i18next";
-import { useTheme } from "@emotion/react";
-import { useRouter } from "next/router";
-
 export default function Custom500() {
-  const { t } = useTranslation();
-  const theme = useTheme();
-  const router = useRouter();
-
-  const handleRefresh = () => {
-    router.reload();
-  };
-  const handleBack = () => {
-    router.back();
-  };
-
   return (
-    <Container
-      maxWidth="lg"
-      sx={{
-        mt: { md: "9rem" },
-        mb: { xs: "72px", md: "0" },
-      }}
-    >
-      <CustomStackFullWidth
-        justifyContent="center"
-        alignItems="center"
-        spacing={4}
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      minHeight: '100vh',
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      padding: '20px',
+      textAlign: 'center'
+    }}>
+      <h1 style={{ fontSize: '72px', margin: '0', color: '#dc3545' }}>500</h1>
+      <h2 style={{ fontSize: '24px', margin: '16px 0', color: '#333' }}>Internal Server Error</h2>
+      <p style={{ color: '#666', marginBottom: '24px' }}>Something went wrong on our end. Please try again later.</p>
+      <button
+        onClick={() => window.location.reload()}
+        style={{
+          padding: '12px 24px',
+          fontSize: '16px',
+          backgroundColor: '#0070f3',
+          color: 'white',
+          border: 'none',
+          borderRadius: '8px',
+          cursor: 'pointer'
+        }}
       >
-        <Stack width="100%" spacing={2} padding="1rem" alignItems="center">
-          <img src={FiveHundred.src} alt="500" height="150px" />
-          <Typography
-            align="center"
-            variant="h3"
-            sx={{
-              fontSize: "30px",
-              fontWeight: "700",
-              display: "flex",
-              flexDirection: "column",
-              color: theme.palette.text.secondary,
-            }}
-          >
-            {t("Internal server error")}
-            <Typography component="span" fontSize="16px" fontWeight="400">
-              {t("Try to ")}
-              <Typography
-                component="span"
-                sx={{
-                  color: theme.palette.info.main,
-                  cursor: "pointer",
-                }}
-                onClick={handleRefresh}
-              >
-                {t("refresh ")}
-              </Typography>
-              <Typography component="span">
-                {t("this page or go back to previous page")}
-              </Typography>
-            </Typography>
-          </Typography>
-          <Button
-            variant="contained"
-            onClick={handleBack}
-            sx={{
-              width: "120px",
-              backgroundColor: theme.palette.text.secondary,
-            }}
-          >
-            {t("Go Back")}
-          </Button>
-        </Stack>
-      </CustomStackFullWidth>
-    </Container>
+        Refresh Page
+      </button>
+    </div>
   );
 }

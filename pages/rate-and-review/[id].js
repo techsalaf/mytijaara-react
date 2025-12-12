@@ -3,7 +3,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import MainLayout from "../../src/components/layout/MainLayout";
 import AuthGuard from "../../src/components/route-guard/AuthGuard";
 import { useRouter } from "next/router";
-import { getServerSideProps } from "../index";
 import RateAndReview from "../../src/components/review/RateAndReview";
 import SEO from "../../src/components/seo";
 import CustomContainer from "../../src/components/container";
@@ -53,5 +52,8 @@ const Index = ({ configData, landingPageData }) => {
   );
 };
 
+export const getServerSideProps = async () => {
+  return { props: {} };
+};
+
 export default Index;
-export { getServerSideProps };

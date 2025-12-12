@@ -49,7 +49,7 @@ const Index = ({ configData, landingPageData }) => {
 
 export default Index;
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
   try {
     const configRes = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/config`,

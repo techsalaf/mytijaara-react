@@ -5,16 +5,20 @@ import {
 import { baseThemeOptions } from "./base-theme-options";
 import { darkThemeOptions } from "./dark-theme-options";
 import { lightThemeOptions } from "./light-theme-options";
-export const createTheme = (config) => {
+export const createTheme = (config = {}) => {
+  // Provide defaults to prevent SSG errors
+  const mode = config?.mode || 'light';
+  const direction = config?.direction || 'ltr';
+  
   let theme = createMuiTheme(
     baseThemeOptions,
-    config.mode === "light" ? lightThemeOptions : darkThemeOptions,
+    mode === "light" ? lightThemeOptions : darkThemeOptions,
     {
-      direction: config.direction,
+      direction: direction,
     }
   );
 
-  if (config.responsiveFontSizes) {
+  if (config?.responsiveFontSizes) {
     theme = responsiveFontSizes(theme);
   }
 

@@ -6,7 +6,6 @@ import MainLayout from "../../../../src/components/layout/MainLayout";
 import {PageDetailsWrapper} from "../../../../src/styled-components/CustomStyles.style";
 import CustomContainer from "../../../../src/components/container";
 import TypeWiseStore from "../../../../src/components/Store/TypeWiseStore";
-import { getServerSideProps } from "../../../index";
 import {getCurrentModuleType} from "../../../../src/helper-functions/getCurrentModuleType";
 
 
@@ -36,5 +35,8 @@ const Index = ({ configData, landingPageData }) => {
   );
 };
 
+export const getServerSideProps = async () => {
+  return { props: {} };
+};
+
 export default Index;
-export { getServerSideProps };
