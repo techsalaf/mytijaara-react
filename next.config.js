@@ -1,6 +1,8 @@
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['simplebar-react'],
+  // Silence Turbopack warning
+  turbopack: {},
   images: {
     remotePatterns: [
       {
