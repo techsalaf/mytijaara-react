@@ -187,22 +187,35 @@ CustomDocument.getInitialProps = async (ctx) => {
   // 🛠 Fetch analytics config server-side
   let analyticsConfig = {};
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com";
-    const res = await fetch(`${baseUrl}/api/v1/config/get-analytic-scripts`, {
-      headers: {
-        "X-software-id": 33571750,
-        "X-server": "server",
-        origin: process.env.NEXT_CLIENT_HOST_URL || "http://localhost:3000",
-      },
-    });
-    const data = await res.json();
-    if (Array.isArray(data)) {
-      data.forEach((item) => {
-        if (item.type && item.script_id) analyticsConfig[item.type] = item.script_id;
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    if (baseUrl) {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      
+      const res = await fetch(`${baseUrl}/api/v1/config/get-analytic-scripts`, {
+        headers: {
+          "X-software-id": "33571750",
+          "X-server": "server",
+          origin: process.env.NEXT_CLIENT_HOST_URL || "http://localhost:3000",
+        },
+        signal: controller.signal,
       });
+      clearTimeout(timeoutId);
+      
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          data.forEach((item) => {
+            if (item.type && item.script_id) analyticsConfig[item.type] = item.script_id;
+          });
+        }
+      }
     }
   } catch (err) {
-    console.error("Error fetching analytics config:", err);
+    // Silently fail in development to avoid blocking page loads
+    if (process.env.NODE_ENV !== 'development') {
+      console.error("Error fetching analytics config:", err.message);
+    }
   }
 
   return {
