@@ -88,7 +88,7 @@ export const getServerSideProps = async (context) => {
 	// Set cache control headers for 1 hour (3600 seconds)
 	res.setHeader(
 		"Cache-Control",
-		"public, s-maxage=3600, stale-while-revalidate"
+		"public, s-maxage=60, stale-while-revalidate"
 	);
 
 	return {
