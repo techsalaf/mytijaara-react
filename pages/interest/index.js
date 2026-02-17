@@ -3,6 +3,7 @@ import ZoneGuard from "../../src/components/route-guard/ZoneGuard";
 import CssBaseline from "@mui/material/CssBaseline";
 import MainLayout from "../../src/components/layout/MainLayout";
 import InterestOptions from "../../src/components/interest/InterestOptions";
+import { getServerSideProps } from "../index";
 import CustomContainer from "../../src/components/container";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetConfigData } from "../../src/api-manage/hooks/useGetConfigData";
@@ -41,9 +42,6 @@ const Index = () => {
   );
 };
 
-export const getServerSideProps = async () => {
-  return { props: {} };
-};
-
 export default Index;
 Index.getLayout = (page) => <ZoneGuard>{page}</ZoneGuard>;
+export { getServerSideProps };

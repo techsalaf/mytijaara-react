@@ -41,6 +41,7 @@ import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import ChatWithAdmin from "components/my-orders/order-details/other-order/ChatWithAdmin";
 import { useGetOrderCancelReason } from "api-manage/hooks/react-query/order/useGetAutomatedMessage";
 import { getToken } from "helper-functions/getToken";
+import { LoadingButton } from "@mui/lab";
 
 const getAddOnsNames = (addOns) => {
   if (!addOns || addOns.length === 0) return "";
@@ -63,6 +64,9 @@ const OrderSummery = (props) => {
     isLoading,
     dataIsLoading,
     refetchTrackOrder,
+    setOpenPaymentMethod,
+    handlePayment,
+    repayOrderLoading
   } = props;
   const theme = useTheme();
   const isSmall = useMediaQuery(theme.breakpoints.down("md"));
@@ -102,7 +106,12 @@ const OrderSummery = (props) => {
       return theme.palette.warning.lite;
     }
   };
-
+  const isPaymentFailed = () => {
+    return (trackOrderData?.order_status === "failed" || !trackOrderData?.offline_payment)
+      && (trackOrderData?.payment_status === "unpaid" || (trackOrderData?.payments[1]?.payment_status === "unpaid" && trackOrderData?.payments[1]?.payment_method !== "cash_on_delivery"))
+      && (trackOrderData?.payment_method !== "cash_on_delivery" && trackOrderData?.payment_method !== "wallet")
+      && trackOrderData?.order_status !== "canceled"
+  };
   return (
     <>
       {data && data.module_type === "parcel" ? (
@@ -111,6 +120,10 @@ const OrderSummery = (props) => {
           trackOrderData={trackOrderData}
           configData={configData}
           refetchTrackOrder={refetchTrackOrder}
+          isPaymentFailed={isPaymentFailed}
+          repayOrderLoading={repayOrderLoading}
+          setOpenPaymentMethod={setOpenPaymentMethod}
+          handlePayment={handlePayment}
         />
       ) : (
         <Grid container pr={{ xs: "0px", sm: "0px", md: "40px" }}>
@@ -118,7 +131,7 @@ const OrderSummery = (props) => {
             <Grid item xs={12} sm={12} md={12}>
               {!data?.prescription_order &&
                 trackOrderData?.module_type === "pharmacy" &&
-                trackOrderData?.order_attachment_full_url && (
+                trackOrderData?.order_attachment_full_url && trackOrderData?.attachment && (
                   <SingleOrderAttachment
                     title="Prescription"
                     trackOrderData={trackOrderData}
@@ -177,7 +190,7 @@ const OrderSummery = (props) => {
                             <Stack flexDirection={"row"} gap={"4px"}>
                               {t(product?.item_details?.name)}
                               {product?.item_details?.halal_tag_status &&
-                              product?.item_details?.is_halal ? (
+                                product?.item_details?.is_halal ? (
                                 <FoodHalalHaram
                                   position="relative"
                                   width={23}
@@ -233,12 +246,12 @@ const OrderSummery = (props) => {
                 direction={{ xs: "column", md: "row" }}
                 sx={{
                   flexWrap: "wrap",
-                  justifyContent: "space-between",
+                  //justifyContent: "space-between",
                   padding: { xs: "0px , 20px", md: "0px 25px" },
                   gap: { xs: "10px", md: "0px" },
                 }}
               >
-                <Stack spacing={1}>
+                <Stack spacing={1} >
                   <Typography
                     fontSize={{ xs: "14px", md: "16px" }}
                     fontWeight="500"
@@ -262,23 +275,35 @@ const OrderSummery = (props) => {
                         `3px solid ${alpha(theme.palette.neutral[400], 0.2)}`,
                       paddingLeft: "30px",
 
-                      height: "100px",
+                      height: "100p%",
                     }}
                   ></Stack>
                 )}
-                <Stack>
+                <Stack flex={1}>
                   <Stack
+                    width="100%"
                     spacing={1}
                     flexDirection="row"
                     justifyContent="space-between"
+
                   >
-                    <Stack gap="12px">
-                      <Typography
-                        fontSize={{ xs: "14px", md: "16px" }}
-                        fontWeight="500"
-                      >
-                        {t("Payment")}
-                      </Typography>
+                    <Stack gap="12px" width="100%">
+                      <Stack direction="row" alignItems="center" justifyContent="space-between" width="100%">
+                        <Typography
+                          fontSize={{ xs: "14px", md: "16px" }}
+                          fontWeight="500"
+                        >
+                          {t("Payment")}
+                        </Typography>
+                        <Typography
+                          fontSize={{ xs: "14px", md: "14px" }}
+                          fontWeight="500"
+                          color={theme.palette.primary.main}
+                          sx={{ padding: "3px 5px", backgroundColor: alpha(theme.palette.primary.main, 0.2), borderRadius: "5px", textTransform: "capitalize" }}
+                        >
+                          {trackOrderData?.payment_status.replace("_", " ")}
+                        </Typography>
+                      </Stack>
                       {trackOrderData?.payment_method ? (
                         <CustomStackFullWidth flexDirection="row">
                           <CashSvg />
@@ -302,9 +327,23 @@ const OrderSummery = (props) => {
                       ) : (
                         <Skeleton width="100px" variant="text" />
                       )}
+                      {isPaymentFailed() && (
+                        <Typography sx={{ maxWidth: "336px" }} fontSize={{ xs: "12px", md: "14px" }} fontWeight="400" color={theme.palette.neutral[500]}>
+                          {t("Your payment was incomplete. Please choose an option below to complete your transaction.")}
+                        </Typography>
+                      )}
+                      {isPaymentFailed() && (
+                        <Stack direction="row" spacing={1} width="100%">
+                          {getToken() && <Button variant="contained" fullWidth onClick={() => setOpenPaymentMethod(true)}>
+                            {t("Pay Now")}
+                          </Button>}
+                          <LoadingButton variant="outlined" loading={repayOrderLoading} fullWidth onClick={handlePayment}>
+                            {t("Switch to COD")}
+                          </LoadingButton>
+                        </Stack>
+                      )}
                     </Stack>
-                    {(trackOrderData?.payment_method === "offline_payment" ||
-                      partialWithOffline) && (
+                    {(trackOrderData?.payment_method === "offline_payment") && trackOrderData?.offline_payment && (
                       <Stack alignItems="flex-end" gap="5px">
                         <Typography
                           component="span"
@@ -317,15 +356,16 @@ const OrderSummery = (props) => {
                             backgroundColor: buttonBackgroundColor(),
                             color: theme.palette.whiteContainer.main,
                             fontWeight: "600",
+                            marginTop: "-8px",
                           }}
                         >
                           {/* {trackData?.order_status.replace("_", " ")} */}
                           {trackOrderData?.offline_payment?.data?.status}
                         </Typography>
-                        <ExpandMoreIcon
+                        {trackOrderData?.offline_payment && (trackOrderData?.payment_method === "offline_payment") ? (<ExpandMoreIcon
                           onClick={handleClickOffline}
                           sx={{ cursor: "pointer" }}
-                        />
+                        />) : null}
                       </Stack>
                     )}
                   </Stack>
@@ -335,12 +375,36 @@ const OrderSummery = (props) => {
                       <OfflineOrderDetails
                         trackOrderData={trackOrderData}
                         setOpenOfflineModal={setOpenOfflineModal}
+                        setOpenPaymentMethod={setOpenPaymentMethod}
+                        refetchTrackOrder={refetchTrackOrder}
                       />
                     )}
+
                   {trackOrderData?.offline_payment?.data?.status ===
-                    "denied" && (
-                    <OfflineOrderDenied trackOrderData={trackOrderData} />
-                  )}
+                    "denied" && (trackOrderData?.payment_method == "offline_payment") && (
+                      <OfflineOrderDenied trackOrderData={trackOrderData} />
+                    )}
+                  {trackOrderData?.offline_payment?.data?.status ===
+                    "denied" && (trackOrderData?.payment_method === "offline_payment") && getToken() && (
+                      <Stack direction="row" spacing={1} width="100%" marginTop="15px">
+                        <LoadingButton
+                          variant="outlined"
+                          fullWidth
+                          loading={repayOrderLoading}
+                          onClick={handlePayment}
+                        >
+                          {t("Switch to COD")}
+                        </LoadingButton>
+                        <Button
+                          variant="contained"
+                          fullWidth
+                          onClick={() => setOpenPaymentMethod(true)}
+                        >
+                          {t("Update Payment")}
+                        </Button>
+                      </Stack>
+                    )}
+
                   {openOfflineModal && (
                     <CustomModal
                       openModal={openOfflineModal}
@@ -452,10 +516,10 @@ const OrderSummery = (props) => {
                   note={trackOrderData?.refund_cancellation_note}
                 />
               )}
-              {trackOrderData?.order_status === "canceled" && (
+              {trackOrderData?.order_status === "canceled" && trackOrderData?.cancellation_note && (
                 <InstructionBox
                   title="cancellation note"
-                  note={trackOrderData?.cancellation_reason}
+                  note={trackOrderData?.cancellation_note}
                 />
               )}
             </Grid>

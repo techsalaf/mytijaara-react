@@ -4,6 +4,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import MainLayout from "../../src/components/layout/MainLayout";
 import PolicyPage from "../../src/components/policy-page";
 import useGetPolicyPage from "../../src/api-manage/hooks/react-query/useGetPolicyPage";
+import { getServerSideProps } from "../index";
 import SEO from "../../src/components/seo";
 import { getImageUrl } from "utils/CustomFunctions";
 
@@ -39,8 +40,5 @@ const Index = ({ configData, landingPageData }) => {
   );
 };
 
-export const getServerSideProps = async () => {
-  return { props: {} };
-};
-
 export default Index;
+export { getServerSideProps };

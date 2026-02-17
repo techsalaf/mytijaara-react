@@ -54,7 +54,7 @@ const Index = ({ configData, landingPageData }) => {
 
 export default Index;
 
-export const getServerSideProps = async () => {
+export const getStaticProps = async () => {
   try {
     // Fetch configuration data
     const configRes = await fetch(

@@ -51,8 +51,3 @@ const Index = () => {
 };
 
 export default Index;
-
-// Force SSR to avoid static generation issues with theme context
-export const getServerSideProps = async () => {
-  return { props: {} };
-};

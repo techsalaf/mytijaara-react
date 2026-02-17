@@ -47,7 +47,12 @@ const Index = () => {
           for (const pair of keyValuePairs) {
             const [key, value] = pair.split("=");
             if (key === "attribute_id") {
-              setAttributeId(value);
+              if (page === "my-orders?flag=success" ||
+                page === "my-orders" ||
+                page === "my-orders?flag=cancel" ||
+                page === "my-orders?flag=fail") {
+                setAttributeId(value);
+              }
               return; // Exit the loop when attribute_id is found
             }
           }
@@ -86,8 +91,3 @@ const Index = () => {
 };
 
 export default Index;
-
-// Force SSR to avoid static generation issues with theme context
-export const getServerSideProps = async () => {
-  return { props: {} };
-};

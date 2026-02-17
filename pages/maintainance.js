@@ -66,8 +66,4 @@ const Maintainance = (props) => {
 
 Maintainance.propTypes = {};
 
-export const getServerSideProps = async () => {
-  return { props: {} };
-};
-
 export default Maintainance;

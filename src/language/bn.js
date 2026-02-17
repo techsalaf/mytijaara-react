@@ -699,7 +699,7 @@ export const bengali = {
   "some Customer & Restaurant Owners": "بعض العملاء وأصحاب المطاعم",
   "Become a store owner": "كن صاحب متجر",
   "Become A Seller": "كن بائعا",
-  "Register as seller and open shop in MyTijaara to start your business":
+  "Register as a seller and open a shop on MyTijaara to start your business":
     "سجل كبائع وافتح متجرًا في MyTijaara لبدء عملك",
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit.":
     "العميل مهم جدا ، العميل سيتبعه.",

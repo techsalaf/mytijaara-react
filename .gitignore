@@ -8,7 +8,7 @@ node_modules/
 out/
 
 # Production build
-build/
+build
 dist/
 
 # Environment files (keep example)

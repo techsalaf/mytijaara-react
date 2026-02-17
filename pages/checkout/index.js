@@ -11,6 +11,7 @@ import CustomContainer from "../../src/components/container";
 import MainLayout from "../../src/components/layout/MainLayout";
 import AuthGuard from "../../src/components/route-guard/AuthGuard";
 import SEO from "../../src/components/seo";
+import { getServerSideProps } from "../index";
 import { getImageUrl } from "utils/CustomFunctions";
 import useScrollToTop from "api-manage/hooks/custom-hooks/useScrollToTop";
 import { setConfigData } from "redux/slices/configData";
@@ -24,7 +25,7 @@ const CheckOutPage = () => {
     (state) => state.configData
   );
   const router = useRouter();
-  const { page, store_id, id } = router.query;
+  const { page, store_id, id, incomplete_payment } = router.query;
   const {
     cartList: aliasCartList,
     campaignItemList,
@@ -99,21 +100,19 @@ const CheckOutPage = () => {
                 totalAmount={totalAmount}
               />
             )}
-            <RedirectWhenCartEmpty
-              page={page}
-              cartList={aliasCartList}
-              campaignItemList={campaignItemList}
-              buyNowItemList={buyNowItemList}
-            />
+            {!incomplete_payment && (
+              <RedirectWhenCartEmpty
+                page={page}
+                cartList={aliasCartList}
+                campaignItemList={campaignItemList}
+                buyNowItemList={buyNowItemList}
+              />
+            )}
           </AuthGuard>
         </CustomContainer>
       </MainLayout>
     </>
   );
-};
-
-export const getServerSideProps = async () => {
-  return { props: {} };
 };
 
 export default CheckOutPage;

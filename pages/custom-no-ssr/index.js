@@ -11,8 +11,3 @@ const CustomNoSsr = ({ children }) => {
 CustomNoSsr.propTypes = {};
 
 export default CustomNoSsr;
-
-// Force SSR to avoid static generation issues with theme context
-export const getServerSideProps = async () => {
-  return { props: {} };
-};
